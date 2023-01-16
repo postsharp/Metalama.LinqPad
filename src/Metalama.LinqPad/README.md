@@ -1,5 +1,3 @@
-# Metalama.LinqPad
-
 The `Metalama.LinqPad` package allows you to load any C# project or solution into LINQPad and exposes its code model to queries. This package contains an optional driver, samples, and dumping methods.
 
 For documentation, see https://doc.metalama.net/introspection-api.
