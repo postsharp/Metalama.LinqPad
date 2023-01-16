@@ -9,9 +9,7 @@ using PostSharp.Engineering.BuildTools.Dependencies.Model;
 using Spectre.Console.Cli;
 using System.Linq;
 
-var temporaryDependencyDefinition = new DependencyDefinition( "Metalama.LinqPad", VcsProvider.GitHub, "Metalama" );
-
-var product = new Product( temporaryDependencyDefinition )
+var product = new Product( Dependencies.MetalamaLinqPad )
 {
     Solutions = new Solution[]
     {
