@@ -4,6 +4,11 @@
         <RepoDirectory>$(MSBuildThisFileDirectory)</RepoDirectory>
         <RepoKind>GitHub</RepoKind> <!-- Valid values: AzureRepos | GitHub -->
     </PropertyGroup>
+		
+	<!-- We don't want nullability warnings in the Release build since the inlining AssertNotNull creates issues to anayzers -->
+    <PropertyGroup Condition="'$(Configuration)'=='Release' OR ( '$(TargetFramework)'!='net6.0' AND '$(TargetFramework)'!='net7.0' )">
+        <DisableCodeQuality>True</DisableCodeQuality>
+    </PropertyGroup>
 
     <Import Project="eng\Versions.props"/>
     <Import Project="eng\Packaging.props"/>
@@ -11,6 +16,5 @@
 	<Import Sdk="PostSharp.Engineering.Sdk" Project="TeamCity.props"/>
     <Import Sdk="PostSharp.Engineering.Sdk" Project="StrongName.props"/>
     <Import Sdk="PostSharp.Engineering.Sdk" Project="SourceLink.props"/>
-
 
 </Project>

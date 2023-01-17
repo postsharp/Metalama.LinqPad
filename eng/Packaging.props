@@ -6,7 +6,7 @@
     <PropertyGroup>
         <Authors>PostSharp Technologies</Authors>
         <PackageProjectUrl>https://github.com/postsharp/Caravela</PackageProjectUrl>
-        <PackageTags></PackageTags>
+        <PackageTags>$(PackageTags) PostSharp Metalama AOP</PackageTags>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <PackageIcon>postsharp.png</PackageIcon>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>

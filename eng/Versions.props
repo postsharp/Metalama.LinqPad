@@ -4,23 +4,29 @@
     <Import Project="MainVersion.props" />
     
     <PropertyGroup>
-        <MyProductVersion>$(MainVersion)$(PackageVersionSuffix)</MyProductVersion>
-        <MyProductAssemblyVersion>$(MainVersion)</MyProductAssemblyVersion>
+        <MetalamaLinqPadVersion>$(MainVersion)$(PackageVersionSuffix)</MetalamaLinqPadVersion>
+        <MetalamaLinqPadAssemblyVersion>$(MainVersion)</MetalamaLinqPadAssemblyVersion>
     </PropertyGroup>
 
     
     <!-- Set the default versions of dependencies -->
     <PropertyGroup>
-        <PostSharpEngineeringVersion>1.0.99-preview</PostSharpEngineeringVersion>
-		<MetalamaVersion>branch:master</MetalamaVersion>
+        <PostSharpEngineeringVersion>1.0.114-preview</PostSharpEngineeringVersion>
+		<!-- Public version -->
+		<MetalamaVersion>0.5.80-preview</MetalamaVersion>
+		<!-- Development version -->
+		<MetalamaVersion Condition="$(VcsBranch)!=''">branch:master</MetalamaVersion>
+		<MicrosoftNETTestSdkVersion>17.0.0</MicrosoftNETTestSdkVersion>
+		<xUnitVersion>2.4.1</xUnitVersion>
+		<CoverletVersion>3.1.0</CoverletVersion>
     </PropertyGroup>
 
     <!-- Override versions (both this product and dependencies) for the local build -->
     <Import Project="Versions.g.props" Condition="Exists('Versions.g.props')" />
 
     <PropertyGroup>
-        <AssemblyVersion>$(MyProductAssemblyVersion)</AssemblyVersion>
-        <Version>$(MyProductVersion)</Version>
+        <AssemblyVersion>$(MetalamaLinqPadAssemblyVersion)</AssemblyVersion>
+        <Version>$(MetalamaLinqPadVersion)</Version>
     </PropertyGroup>
 
 </Project>
