@@ -33,7 +33,7 @@ public sealed class SchemaTests : UnitTestClass
         var schema = factory.GetSchema();
 
         var xml = new XDocument();
-        xml.Add( new XElement( "schema", schema.SelectAsImmutableArray( item => (object) ConvertToXml( item ) ) ) );
+        xml.Add( new XElement( "schema", schema.Select( item => (object) ConvertToXml( item ) ) ) );
 
         var xmlString = xml.ToString();
         this._logger.WriteLine( xmlString );
@@ -49,8 +49,8 @@ public sealed class SchemaTests : UnitTestClass
     {
         using var testContext = this.CreateTestContext();
 
-        var projectPath = Path.Combine( testContext.ProjectOptions.BaseDirectory, "Project.csproj" );
-        var codePath = Path.Combine( testContext.ProjectOptions.BaseDirectory, "Code.cs" );
+        var projectPath = Path.Combine( testContext.BaseDirectory, "Project.csproj" );
+        var codePath = Path.Combine( testContext.BaseDirectory, "Code.cs" );
 
         await File.WriteAllTextAsync(
             projectPath,
@@ -72,7 +72,7 @@ public sealed class SchemaTests : UnitTestClass
 
         var schema = factory.GetSchema( workspace );
         var xml = new XDocument();
-        xml.Add( new XElement( "schema", schema.SelectAsImmutableArray( item => (object) ConvertToXml( item ) ) ) );
+        xml.Add( new XElement( "schema", schema.Select( item => (object) ConvertToXml( item ) ) ) );
         var xmlString = xml.ToString();
         this._logger.WriteLine( xmlString );
     }
@@ -88,7 +88,7 @@ public sealed class SchemaTests : UnitTestClass
 
         if ( item.Children != null )
         {
-            element.Add( item.Children.SelectAsImmutableArray( explorerItem => (object) ConvertToXml( explorerItem ) ) );
+            element.Add( item.Children.Select( explorerItem => (object) ConvertToXml( explorerItem ) ) );
         }
 
         return element;
