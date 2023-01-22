@@ -4,13 +4,13 @@ using LINQPad;
 using Metalama.Framework.Code;
 using Metalama.Framework.Diagnostics;
 using Metalama.Framework.Engine;
-using Metalama.Framework.Engine.Diagnostics;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Metalama.Framework.Engine.Utilities;
 
 namespace Metalama.LinqPad
 {

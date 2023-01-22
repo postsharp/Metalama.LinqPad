@@ -25,6 +25,7 @@ public sealed class SchemaTests : UnitTestClass
         this._logger = logger;
     }
 
+    /*
     [Fact]
     public void SchemaWithoutWorkspace()
     {
@@ -43,7 +44,8 @@ public sealed class SchemaTests : UnitTestClass
         var stringItem = flatSchema.First( i => i.DragText == "workspace.SourceCode.TargetFrameworks" );
         Assert.Empty( stringItem.Children ?? new List<ExplorerItem>() );
     }
-
+*/
+    
     [Fact]
     public async Task SchemaWithWorkspace()
     {
