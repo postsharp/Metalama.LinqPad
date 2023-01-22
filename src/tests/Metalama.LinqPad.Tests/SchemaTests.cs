@@ -45,7 +45,7 @@ public sealed class SchemaTests : UnitTestClass
         Assert.Empty( stringItem.Children ?? new List<ExplorerItem>() );
     }
 */
-    
+
     [Fact]
     public async Task SchemaWithWorkspace()
     {

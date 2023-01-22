@@ -13,7 +13,7 @@ var product = new Product( Dependencies.MetalamaLinqPad )
 {
     Solutions = new Solution[]
     {
-        new DotNetSolution( "Metalama.LinqPad.sln" )
+        new DotNetSolution( "Metalama.LinqPad.sln" ) { CanFormatCode = true }
     },
     PublicArtifacts = Pattern.Create( "Metalama.LinqPad.$(PackageVersion).nupkg" ),
     Dependencies = new[] { Dependencies.PostSharpEngineering, Dependencies.Metalama },
