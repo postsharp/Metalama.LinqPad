@@ -82,5 +82,24 @@ namespace Metalama.LinqPad.Tests
             var propertyType = type.PropertyTypes.First();
             Assert.Equal( typeof(string), propertyType );
         }
+        
+        [Fact]
+        public void Obsolete()
+        {
+            var type = _facadeObjectFactory.GetFormatterType( typeof(ObsoleteAsset) );
+            Assert.Single( type.PropertyNames );
+            var propertyName = type.PropertyNames.First();
+            Assert.Equal( nameof(ObsoleteAsset.NonObsolete), propertyName );
+        }
+
+        [Fact]
+        public void ByRefProperty()
+        {
+            using var testContext = this.CreateTestContext();
+            var compilation = testContext.CreateCompilation( "class C { int F = 5; }" );
+            var expression = compilation.Types.Single().Fields.Single().InitializerExpression;
+            var facadeObjectFactory = new FacadeObjectFactory();
+            facadeObjectFactory.GetFacade( expression );
+        }
     }
 }

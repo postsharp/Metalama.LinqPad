@@ -1,12 +1,16 @@
 // Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
 using LINQPad;
+using Metalama.Framework.Code;
+using Metalama.Testing.UnitTesting;
+using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Metalama.LinqPad.Tests
 {
-    public sealed class PropertyFormatterTests
+    public sealed class PropertyFormatterTests : UnitTestClass
     {
         [Fact]
         public void GroupingTest()

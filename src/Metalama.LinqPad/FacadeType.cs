@@ -1,6 +1,7 @@
 // Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
 using Metalama.Framework.Code;
+using Metalama.Framework.Code.SyntaxBuilders;
 using Metalama.Framework.Utilities;
 using System;
 using System.Collections.Generic;
@@ -70,7 +71,7 @@ namespace Metalama.LinqPad
                                 propertyName,
                                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic );
 
-                        if ( property != null )
+                        if ( property != null && !property.IsDefined( typeof(ObsoleteAttribute) ))
                         {
                             properties[propertyName] = new FacadeProperty( propertyName, publicGetter.ReturnType, CreateCompiledGetter( publicGetter ) );
                         }
@@ -93,7 +94,7 @@ namespace Metalama.LinqPad
                 {
                     var getter = property.GetMethod;
 
-                    if ( getter == null || getter.GetParameters().Length != 0 )
+                    if ( getter == null || getter.GetParameters().Length != 0 || property.IsDefined( typeof(ObsoleteAttribute) ))
                     {
                         continue;
                     }
@@ -103,6 +104,11 @@ namespace Metalama.LinqPad
 
                 foreach ( var field in publicType.GetFields( BindingFlags.Public | BindingFlags.Instance ) )
                 {
+                    if ( !field.IsDefined( typeof(ObsoleteAttribute) ) )
+                    {
+                        continue;
+                    }
+                    
                     properties[field.Name] = new FacadeProperty( field.Name, field.FieldType, CreateCompiledGetter( field ) );
                 }
             }
@@ -145,12 +151,33 @@ namespace Metalama.LinqPad
         private static Func<object, object?> CreateCompiledGetter( MethodInfo getter )
         {
             var parameter = Expression.Parameter( typeof(object) );
-            var castParameter = Expression.Convert( parameter, getter.DeclaringType! );
-            var getProperty = Expression.Convert( Expression.Call( castParameter, getter ), typeof(object) );
-            var lambda = Expression.Lambda<Func<object, object?>>( getProperty, parameter ).Compile();
 
-            return lambda;
+            if ( getter.ReturnType.IsByRef && getter.Name == "get_Value" )
+            {
+                // We have an IExpression.Value which returns object&, but the &s are not supported
+                // by LINQ expressions.
+
+                var method = typeof(FacadeType).GetMethod( nameof(GetExpressionValue), BindingFlags.Static | BindingFlags.NonPublic );
+                var castParameter = Expression.Convert( parameter, typeof(IExpression) );
+                var callMethod = Expression.Call( null, method, castParameter );
+
+                var lambda = Expression.Lambda<Func<object, object?>>( callMethod, parameter ).Compile();
+
+                return lambda;
+            }
+            else
+            {
+                var castParameter = Expression.Convert( parameter, getter.DeclaringType! );
+                var callGetter = (Expression) Expression.Call( castParameter, getter );
+
+                var getProperty = Expression.Convert( callGetter, typeof(object) );
+                var lambda = Expression.Lambda<Func<object, object?>>( getProperty, parameter ).Compile();
+
+                return lambda;
+            }
         }
+
+        internal static object GetExpressionValue( IExpression expression ) => expression.Value;
 
         private bool IsPublicAssembly( Assembly assembly ) => this._factory.PublicAssemblies.Contains( assembly );
 
