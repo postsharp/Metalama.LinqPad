@@ -12,8 +12,8 @@
     
     <!-- Set the default versions of dependencies -->
     <PropertyGroup>
-        <PostSharpEngineeringVersion>1.0.130-preview</PostSharpEngineeringVersion>
-		<MetalamaVersion>2023.0.102-rc</MetalamaVersion>
+        <PostSharpEngineeringVersion>2023.1.5-preview</PostSharpEngineeringVersion>
+		<MetalamaVersion>2023.1.0-preview</MetalamaVersion>
 		<MicrosoftNETTestSdkVersion>17.0.0</MicrosoftNETTestSdkVersion>
 		<xUnitVersion>2.4.1</xUnitVersion>
 		<CoverletVersion>3.1.0</CoverletVersion>
