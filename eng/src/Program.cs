@@ -50,6 +50,7 @@ commandApp.AddProductCommands( product );
 
 return commandApp.Run( args );
 
+// TODO: This is a prototype that should go to the main engineering later.
 public class DumpCapturingSolution : DotNetSolution
 {
     public DumpCapturingSolution( string solutionPath ) : base( solutionPath )
@@ -63,7 +64,6 @@ public class DumpCapturingSolution : DotNetSolution
 
         try
         {
-            context.Console.WriteImportantMessage( "Test!!!" );
             return base.Test( context, settings );
         }
         finally
@@ -79,7 +79,7 @@ public class DumpCapturingSolution : DotNetSolution
             return;
         }
 
-        // Wait for 15 minutes.
+        // Wait for 15 minutes (if the timeout is not met, this gets cancelled).
         await Task.Delay( 900_000, token );
 
         // Dump all child processes.
