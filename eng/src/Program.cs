@@ -20,21 +20,18 @@ using MetalamaDependencies = PostSharp.Engineering.BuildTools.Dependencies.Defin
 
 var product = new Product( MetalamaDependencies.MetalamaLinqPad )
 {
-    Solutions = new Solution[]
-    {
-        new DumpCapturingSolution( "Metalama.LinqPad.sln" ) { CanFormatCode = true }
-    },
+    Solutions = new Solution[] { new DumpCapturingSolution( "Metalama.LinqPad.sln" ) { CanFormatCode = true } },
     PublicArtifacts = Pattern.Create( "Metalama.LinqPad.$(PackageVersion).nupkg" ),
     Dependencies = new[] { DevelopmentDependencies.PostSharpEngineering, MetalamaDependencies.Metalama },
     MainVersionDependency = MetalamaDependencies.Metalama,
-    
+
     // This is set temporarily to investigate hanging tests.
     // After removing, don't forget to run `b generate-scripts`. 
     BuildTimeOutThreshold = TimeSpan.FromMinutes( 25 ),
     Configurations = Product.DefaultConfigurations
         .WithValue(
             BuildConfiguration.Debug,
-            Product.DefaultConfigurations.Debug with
+            c => c with
             {
                 AdditionalArtifactRules = new[]
                 {
