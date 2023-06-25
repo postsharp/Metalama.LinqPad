@@ -15,7 +15,11 @@ var product = new Product( MetalamaDependencies.MetalamaLinqPad )
     },
     PublicArtifacts = Pattern.Create( "Metalama.LinqPad.$(PackageVersion).nupkg" ),
     Dependencies = new[] { DevelopmentDependencies.PostSharpEngineering, MetalamaDependencies.Metalama },
-    MainVersionDependency = MetalamaDependencies.Metalama
+    MainVersionDependency = MetalamaDependencies.Metalama,
+    
+    // This is set temporarily to investigate hanging tests.
+    // After removing, don't forget to run `b generate-scripts`. 
+    BuildTimeOutThreshold = TimeSpan.FromMinutes( 25 )
 };
 
 var commandApp = new CommandApp();
