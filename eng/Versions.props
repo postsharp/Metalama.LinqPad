@@ -13,7 +13,7 @@
     <!-- Set the default versions of dependencies -->
     <PropertyGroup>
         <PostSharpEngineeringVersion>2023.2.24</PostSharpEngineeringVersion>
-		<MetalamaVersion></MetalamaVersion>
+		<MetalamaVersion>2023.1.9</MetalamaVersion>
 		<MicrosoftNETTestSdkVersion>17.0.0</MicrosoftNETTestSdkVersion>
 		<xUnitVersion>2.4.1</xUnitVersion>
 		<CoverletVersion>3.1.0</CoverletVersion>
