@@ -2,12 +2,16 @@
 
 using LINQPad;
 using LINQPad.Extensibility.DataContext;
+using Metalama.Backstage.Diagnostics;
+using Metalama.Backstage.Extensibility;
 using Metalama.Framework.Code;
 using Metalama.Framework.Engine;
 using Metalama.Framework.Engine.Pipeline;
 using Metalama.Framework.Engine.Utilities;
 using Metalama.Framework.Introspection;
 using Metalama.Framework.Workspaces;
+using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +23,19 @@ namespace Metalama.LinqPad
     /// </summary>
     public sealed class MetalamaDriver : DynamicDataContextDriver
     {
+        private static ILogger? _logger;
+
+        private static void Initialize()
+        {
+            // We don't start initialization in the static constructor because it causes LinqPad to generate to timeout exception
+            // when the debugger UI is active.
+            if ( _logger == null )
+            {
+                DriverInitialization.Initialize();
+                _logger = BackstageServiceFactory.ServiceProvider.GetLoggerFactory().GetLogger( "LinqPad" );
+            }
+        }
+
         public override string Name => "Metalama";
 
         public override string Author => "PostSharp Technologies";
@@ -35,6 +52,8 @@ namespace Metalama.LinqPad
 
         public override bool ShowConnectionDialog( IConnectionInfo cxInfo, ConnectionDialogOptions dialogOptions )
         {
+            Initialize();
+            
             // Prompt the user for a custom assembly and type name:
             var dialog = new ConnectionDialog( cxInfo );
 
@@ -47,11 +66,15 @@ namespace Metalama.LinqPad
             ref string nameSpace,
             ref string typeName )
         {
-            var connectionData = new ConnectionData( cxInfo );
+            Initialize();
+            
+            try
+            {
+                var connectionData = new ConnectionData( cxInfo );
 
-            var escapedPath = connectionData.Project.ReplaceOrdinal( "\"", "\"\"" );
+                var escapedPath = connectionData.Project.ReplaceOrdinal( "\"", "\"\"" );
 
-            var source = $@"using System;
+                var source = $@"using System;
 using System;
 using System.Collections.Generic;
 using Metalama.LinqPad;
@@ -68,14 +91,21 @@ namespace {nameSpace}
 	}}	
 }}";
 
-            Compile( source, assemblyToBuild.CodeBase!, cxInfo );
+                Compile( source, assemblyToBuild.CodeBase!, cxInfo );
 
-            var workspace = WorkspaceCollection.Default.Load( connectionData.Project );
+                var workspace = WorkspaceCollection.Default.Load( connectionData.Project );
 
-            var schemaFactory = new SchemaFactory( FormatTypeName );
-            var projectSchema = schemaFactory.GetSchema( workspace );
+                var schemaFactory = new SchemaFactory( FormatTypeName );
+                var projectSchema = schemaFactory.GetSchema( workspace );
 
-            return projectSchema;
+                return projectSchema;
+            }
+            catch ( Exception e )
+            {
+                _logger?.Error?.Log( e.ToString() );
+
+                throw;
+            }
         }
 
         public override IEnumerable<string> GetNamespacesToAdd( IConnectionInfo cxInfo )
