@@ -11,6 +11,11 @@ namespace Metalama.LinqPad
     [PublicAPI]
     public class MetalamaDataContext
     {
+        static MetalamaDataContext()
+        {
+            DriverInitialization.Initialize();
+        }
+
         // ReSharper disable once InconsistentNaming
         // ReSharper disable once MemberCanBePrivate.Global
 #pragma warning disable SA1401, IDE1006
