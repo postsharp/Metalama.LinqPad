@@ -49,6 +49,7 @@ commandApp.AddProductCommands( product );
 return commandApp.Run( args );
 
 // TODO: This is a prototype that should go to the main engineering later or be removed.
+#pragma warning disable CA1001
 public class DumpCapturingSolution : DotNetSolution
 {
     private SemaphoreSlim _semaphore = new SemaphoreSlim( 1 );
