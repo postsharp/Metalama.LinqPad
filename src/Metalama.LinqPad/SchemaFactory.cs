@@ -139,7 +139,7 @@ internal sealed class SchemaFactory
                 // Store the entity type to the Tag property. We'll use it later.
                 Tag = enumerableType.GetGenericArguments()[0]
             }
-        ).ToList();
+        ).ToMutableList();
 
         // Create a lookup keying each element type to the properties of that type. This will allow
         // us to build hyperlink targets allowing the user to click between associations:
@@ -154,7 +154,7 @@ internal sealed class SchemaFactory
                 .OrderBy( p => (p.Name, p.PropertyType), PropertyComparer.Instance )
                 .Select( p => this.GetChildItem( elementTypeLookup, p.Name, p.PropertyType ) );
 
-            table.Children = props.ToList();
+            table.Children = props.ToMutableList();
         }
 
         return topLevelProps;
@@ -248,7 +248,7 @@ internal sealed class SchemaFactory
         }
         else
         {
-            return type.GetProperties().Where( filter ).ToList();
+            return type.GetProperties().Where( filter ).ToReadOnlyList();
         }
     }
 
