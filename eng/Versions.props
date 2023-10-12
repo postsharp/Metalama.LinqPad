@@ -12,7 +12,7 @@
     
     <!-- Set the default versions of dependencies -->
     <PropertyGroup>
-        <PostSharpEngineeringVersion>2023.2.41</PostSharpEngineeringVersion>
+        <PostSharpEngineeringVersion>2023.2.49</PostSharpEngineeringVersion>
 		<MicrosoftNETTestSdkVersion>17.0.0</MicrosoftNETTestSdkVersion>
 		<xUnitVersion>2.4.1</xUnitVersion>
 		<CoverletVersion>3.1.0</CoverletVersion>
