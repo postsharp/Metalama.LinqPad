@@ -10,7 +10,6 @@ using Metalama.Framework.Engine.Pipeline;
 using Metalama.Framework.Engine.Utilities;
 using Metalama.Framework.Introspection;
 using Metalama.Framework.Workspaces;
-using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Linq;

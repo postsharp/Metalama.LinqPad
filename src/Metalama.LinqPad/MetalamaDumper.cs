@@ -1,5 +1,6 @@
 // Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
+using JetBrains.Annotations;
 using Metalama.Framework.Code;
 using Metalama.Framework.Engine.CodeModel;
 using Metalama.Framework.Workspaces;
@@ -11,6 +12,7 @@ namespace Metalama.LinqPad
     /// Provides a <see cref="ToDump"/> method, which can be used to format object trees in the way that <see cref="MetalamaDriver"/> does,
     /// but without using <see cref="MetalamaDriver"/>.
     /// </summary>
+    [PublicAPI]
     public static class MetalamaDumper
     {
         private static readonly FacadeObjectFactory _facadeObjectFactory = new( GetWorkspaceExpression );
