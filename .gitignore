@@ -44,3 +44,5 @@ launchSettings.json
 *.Import.props
 *.g.props
 *.log
+/.tools/signclient-appsettings.json
+/dependencies/

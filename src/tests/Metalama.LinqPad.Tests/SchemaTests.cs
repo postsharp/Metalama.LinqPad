@@ -1,10 +1,8 @@
 ﻿// Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
 using LINQPad.Extensibility.DataContext;
-using Metalama.Framework.Code.Collections;
 using Metalama.Framework.Workspaces;
 using Metalama.Testing.UnitTesting;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;

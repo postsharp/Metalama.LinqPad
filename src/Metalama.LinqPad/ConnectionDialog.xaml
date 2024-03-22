@@ -17,6 +17,7 @@
             <Label Padding="0,0,0,1">Project or solution:</Label>
         </DockPanel>
 
+        <!-- ReSharper disable once UnusedMember.Global -->
         <TextBox Name="txtAssemblyPath" Padding="2" Margin="0,1,0,9" Text="{Binding Project}" />
 
         <DockPanel />
@@ -24,12 +25,15 @@
         <DockPanel />
 
         <Label Padding="0,0,0,2">Friendly name for this connection (optional):</Label>
+        <!-- ReSharper disable once UnusedMember.Global -->
         <TextBox Name="txtFriendlyName" Padding="2" Text="{Binding DisplayName}" />
 
         <DockPanel LastChildFill="False" Margin="0,15,0,0">
             <CheckBox IsChecked="{Binding Persist}" VerticalAlignment="Center">Remember this connection</CheckBox>
+            <!-- ReSharper disable once UnusedMember.Global -->
             <Button Name="cancelButton" DockPanel.Dock="Right" Content="Cancel" Margin="6,0,0,0" Padding="10,3"
                     MinWidth="60" IsCancel="True" TabIndex="2" />
+            <!-- ReSharper disable once UnusedMember.Global -->
             <Button Name="okButton" DockPanel.Dock="Right" Content="OK" Margin="6,0,0,0" Padding="10,3" MinWidth="60"
                     IsDefault="True" TabIndex="1" Click="OnOkButtonClick" />
         </DockPanel>
