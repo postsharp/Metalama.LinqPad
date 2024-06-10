@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="LINQPad.Runtime" Version="7.2.7" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkVersion)" />
-        <PackageReference Include="xunit" Version="$(xUnitVersion)" />
-        <PackageReference Include="xunit.runner.visualstudio" Version="$(xUnitVersion)" />
+        <PackageReference Include="LINQPad.Runtime" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit" />
+        <PackageReference Include="xunit.runner.visualstudio" />
         <ProjectReference Include="..\..\Metalama.LinqPad\Metalama.LinqPad.csproj" />
-        <PackageReference Include="Metalama.Compiler.Sdk" Version="$(MetalamaCompilerVersion)" />
-        <PackageReference Include="Metalama.Testing.UnitTesting" Version="$(MetalamaVersion)" />
+        <PackageReference Include="Metalama.Compiler.Sdk" />
+        <PackageReference Include="Metalama.Testing.UnitTesting" />
     </ItemGroup>
 
 </Project>
