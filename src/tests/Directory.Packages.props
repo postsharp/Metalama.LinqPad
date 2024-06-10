@@ -7,8 +7,8 @@
     <PackageVersion Include="LINQPad.Runtime" Version="7.2.7" />
     <PackageVersion Include="Metalama.Compiler.Sdk" Version="$(MetalamaCompilerVersion)" />
     <PackageVersion Include="Metalama.Testing.UnitTesting" Version="$(MetalamaVersion)" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageVersion Include="xunit" Version="2.4.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.0.2" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
   </ItemGroup>
 </Project>
