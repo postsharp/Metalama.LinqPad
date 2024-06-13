@@ -22,9 +22,9 @@ using MetalamaDependencies = PostSharp.Engineering.BuildTools.Dependencies.Defin
 
 var product = new Product( MetalamaDependencies.MetalamaLinqPad )
 {
-    Solutions = new Solution[] { new DumpCapturingSolution( "Metalama.LinqPad.sln" ) { CanFormatCode = true } },
+    Solutions = [new DumpCapturingSolution( "Metalama.LinqPad.sln" ) { CanFormatCode = true }],
     PublicArtifacts = Pattern.Create( "Metalama.LinqPad.$(PackageVersion).nupkg" ),
-    Dependencies = new[] { DevelopmentDependencies.PostSharpEngineering, MetalamaDependencies.Metalama },
+    Dependencies = [DevelopmentDependencies.PostSharpEngineering, MetalamaDependencies.Metalama],
     MainVersionDependency = MetalamaDependencies.Metalama,
 
     // This is set temporarily to investigate hanging tests.
@@ -52,7 +52,7 @@ return commandApp.Run( args );
 #pragma warning disable CA1001
 public class DumpCapturingSolution : DotNetSolution
 {
-    private SemaphoreSlim _semaphore = new SemaphoreSlim( 1 );
+    private SemaphoreSlim _semaphore = new( 1 );
 
     public DumpCapturingSolution( string solutionPath ) : base( solutionPath )
     {
@@ -61,7 +61,7 @@ public class DumpCapturingSolution : DotNetSolution
     public override bool Test( BuildContext context, BuildSettings settings )
     {
         var cancellationSource = new CancellationTokenSource();
-        var monitoringTask = Task.Run( async () => await MonitorTimeout( context, cancellationSource.Token ) );
+        _ = Task.Run( async () => await this.MonitorTimeout( context, cancellationSource.Token ) );
 
         try
         {
@@ -98,8 +98,6 @@ public class DumpCapturingSolution : DotNetSolution
 
             // Dump all child processes.
 
-            var currentProcess = Process.GetCurrentProcess();
-
             var directory = $"{Path.GetTempPath()}\\Metalama\\EngineeringDumps";
 
             Directory.CreateDirectory( directory );
@@ -108,8 +106,9 @@ public class DumpCapturingSolution : DotNetSolution
 
             var mos = new ManagementObjectSearcher( $"Select * From Win32_Process Where ParentProcessID={Environment.ProcessId}" );
 
-            foreach ( ManagementObject mo in mos.Get() )
+            foreach ( var o in mos.Get() )
             {
+                var mo = (ManagementObject)o;
                 ProcessChildProcesses( mo );
             }
 
@@ -174,8 +173,9 @@ public class DumpCapturingSolution : DotNetSolution
 
                 var cmos = new ManagementObjectSearcher( $"Select * From Win32_Process Where ParentProcessID={processObject["ProcessId"]}" );
 
-                foreach ( ManagementObject cmo in cmos.Get() )
+                foreach ( var o in cmos.Get() )
                 {
+                    var cmo = (ManagementObject)o;
                     ProcessChildProcesses( cmo );
                 }
             }
