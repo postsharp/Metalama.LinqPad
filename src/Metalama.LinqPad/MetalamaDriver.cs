@@ -72,26 +72,30 @@ namespace Metalama.LinqPad
                 var connectionData = new ConnectionData( cxInfo );
 
                 var escapedPath = connectionData.Project.ReplaceOrdinal( "\"", "\"\"" );
+                var ignoreLoadErrors = connectionData.IgnoreWorkspaceErrors ? "true" : "false";
 
                 var source = $@"using System;
 using System;
 using System.Collections.Generic;
 using Metalama.LinqPad;
+using Metalama.Framework.Workspaces;
 
 namespace {nameSpace}
 {{
     // The main typed data class. The user's queries subclass this, so they have easy access to all its members.
 	public class {typeName} : {nameof(MetalamaDataContext)}
 	{{
-	    public {typeName}() : base( @""{escapedPath}"" )
+	    public {typeName}() : base( @""{escapedPath}"", {ignoreLoadErrors} )
 		{{
-		}}
-        
+		}}        
 	}}	
 }}";
 
+#pragma warning disable SYSLIB0044
                 Compile( source, assemblyToBuild.CodeBase!, cxInfo );
+#pragma warning restore SYSLIB0044
 
+                WorkspaceCollection.Default.IgnoreLoadErrors = connectionData.IgnoreWorkspaceErrors;
                 var workspace = WorkspaceCollection.Default.Load( connectionData.Project );
 
                 var schemaFactory = new SchemaFactory( FormatTypeName );
@@ -108,7 +112,7 @@ namespace {nameSpace}
         }
 
         public override IEnumerable<string> GetNamespacesToAdd( IConnectionInfo cxInfo )
-            => new[] { "Metalama.Framework.Workspaces", "Metalama.Framework.Code", "Metalama.Framework.Code.Collections" };
+            => new[] { "Metalama.Framework.Workspaces", "Metalama.Framework.Code", "Metalama.Framework.Code.Collections", "Metalama.Framework.Introspection" };
 
         private static IReadOnlyList<string> GetAssembliesToAdd( bool addReferenceAssemblies, IConnectionInfo connectionInfo )
         {

@@ -22,8 +22,9 @@ namespace Metalama.LinqPad
         protected readonly Workspace workspace;
 #pragma warning restore SA1401, IDE1006
 
-        public MetalamaDataContext( string path )
+        public MetalamaDataContext( string path, bool ignoreWorkspaceErrors )
         {
+            WorkspaceCollection.Default.IgnoreLoadErrors = ignoreWorkspaceErrors;
             this.workspace = WorkspaceCollection.Default.Load( path );
         }
     }

@@ -16,12 +16,15 @@ namespace Metalama.LinqPad
         private string? _project;
         private string? _displayName;
         private bool _persist;
+        private bool _ignoreWorkspaceErrors;
 
         public ConnectionData( IConnectionInfo connectionInfo )
         {
             if ( connectionInfo.DriverData != null )
             {
                 this.Project = connectionInfo.DriverData.Element( "Project" )?.Value;
+
+                this.IgnoreWorkspaceErrors = connectionInfo.DriverData.Element( "IgnoreWorkspaceErrors" )?.Value?.ToLowerInvariant() == "true";
             }
 
             this.DisplayName = connectionInfo.DisplayName;
@@ -59,10 +62,25 @@ namespace Metalama.LinqPad
             }
         }
 
+        public bool IgnoreWorkspaceErrors
+        {
+            get => this._ignoreWorkspaceErrors;
+            set
+            {
+                this._ignoreWorkspaceErrors = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public void Save( IConnectionInfo connectionInfo )
         {
             connectionInfo.DisplayName = this.DisplayName;
-            connectionInfo.DriverData = new XElement( "MetalamaConnection", new XElement( "Project", this.Project ) );
+
+            connectionInfo.DriverData = new XElement(
+                "MetalamaConnection",
+                new XElement( "Project", this.Project ),
+                new XElement( "IgnoreWorkspaceErrors", this.IgnoreWorkspaceErrors ) );
+
             connectionInfo.Persist = this.Persist;
         }
 
