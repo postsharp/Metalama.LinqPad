@@ -1,8 +1,10 @@
 ﻿// Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
+using LINQPad;
 using Metalama.Backstage.Application;
 using Metalama.Backstage.Extensibility;
 using Metalama.Framework.Engine.Utilities.Diagnostics;
+using Metalama.Framework.Workspaces;
 
 namespace Metalama.LinqPad;
 
@@ -18,6 +20,8 @@ internal static class DriverInitialization
         }
 
         BuildHostHelper.EnsureBuildHostCopied();
+
+        DiagnosticReporter.ReportAction = diagnostics => diagnostics.Dump( "Error List" );
     }
 
     private class LinqPadApplicationInfo : ApplicationInfoBase

@@ -32,6 +32,8 @@ namespace Metalama.LinqPad
             {
                 Console.WriteLine( diagnostic.FormatAsBuildDiagnostic() );
             }
+            
+            DiagnosticReporter.ClearCounters();
         }
     }
 }
