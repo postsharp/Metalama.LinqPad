@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0-windows;net8.0-windows</TargetFrameworks>
+        <TargetFramework>net8.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <UseWpf>true</UseWpf>
@@ -21,6 +21,9 @@
         <PackageReference Include="JetBrains.Annotations" PrivateAssets="all" />
         <PackageReference Include="LINQPad.Reference" />
         <PackageReference Include="Metalama.Framework.Sdk" ExcludeAssets="build;buildTransitive" />
+        
+        <!-- Required to force LinqPad to load this package instead of the one of the SDK directory. -->
+        <PackageReference Include="Microsoft.Extensions.Logging" />
 
         <InternalsVisibleTo Include="Metalama.LinqPad.Tests" />
     </ItemGroup>

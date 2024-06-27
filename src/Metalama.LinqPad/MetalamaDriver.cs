@@ -1,5 +1,6 @@
 // Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
+using JetBrains.Annotations;
 using LINQPad;
 using LINQPad.Extensibility.DataContext;
 using Metalama.Backstage.Diagnostics;
@@ -20,6 +21,7 @@ namespace Metalama.LinqPad
     /// <summary>
     /// A LinqPad driver that lets you query Metalama workspaces.
     /// </summary>
+    [UsedImplicitly]
     public sealed class MetalamaDriver : DynamicDataContextDriver
     {
         private static ILogger? _logger;
@@ -52,7 +54,7 @@ namespace Metalama.LinqPad
         public override bool ShowConnectionDialog( IConnectionInfo cxInfo, ConnectionDialogOptions dialogOptions )
         {
             Initialize();
-            
+
             // Prompt the user for a custom assembly and type name:
             var dialog = new ConnectionDialog( cxInfo );
 
@@ -66,7 +68,7 @@ namespace Metalama.LinqPad
             ref string typeName )
         {
             Initialize();
-            
+
             try
             {
                 var connectionData = new ConnectionData( cxInfo );
@@ -74,7 +76,7 @@ namespace Metalama.LinqPad
                 var escapedPath = connectionData.Project.ReplaceOrdinal( "\"", "\"\"" );
                 var ignoreLoadErrors = connectionData.IgnoreWorkspaceErrors ? "true" : "false";
 
-                var source = $@"using System;
+                var source = $@"
 using System;
 using System.Collections.Generic;
 using Metalama.LinqPad;
@@ -112,7 +114,14 @@ namespace {nameSpace}
         }
 
         public override IEnumerable<string> GetNamespacesToAdd( IConnectionInfo cxInfo )
-            => new[] { "Metalama.Framework.Workspaces", "Metalama.Framework.Code", "Metalama.Framework.Code.Collections", "Metalama.Framework.Introspection" };
+            => new[]
+            {
+                "Metalama.Framework.Workspaces",
+                "Metalama.Framework.Code",
+                "Metalama.Framework.Code.Collections",
+                "Metalama.Framework.Introspection",
+                "Metalama.Framework.Diagnostics"
+            };
 
         private static IReadOnlyList<string> GetAssembliesToAdd( bool addReferenceAssemblies, IConnectionInfo connectionInfo )
         {

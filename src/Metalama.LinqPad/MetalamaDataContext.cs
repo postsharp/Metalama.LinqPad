@@ -2,6 +2,7 @@
 
 using JetBrains.Annotations;
 using Metalama.Framework.Workspaces;
+using System;
 
 namespace Metalama.LinqPad
 {
@@ -26,6 +27,11 @@ namespace Metalama.LinqPad
         {
             WorkspaceCollection.Default.IgnoreLoadErrors = ignoreWorkspaceErrors;
             this.workspace = WorkspaceCollection.Default.Load( path );
+
+            foreach ( var diagnostic in this.workspace.WorkspaceDiagnostics )
+            {
+                Console.WriteLine( diagnostic.FormatAsBuildDiagnostic() );
+            }
         }
     }
 }

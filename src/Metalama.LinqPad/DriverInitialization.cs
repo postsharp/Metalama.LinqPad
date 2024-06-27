@@ -16,6 +16,8 @@ internal static class DriverInitialization
 
             BackstageServiceFactoryInitializer.Initialize( new BackstageInitializationOptions( new LinqPadApplicationInfo() ) { AddSupportServices = true } );
         }
+
+        BuildHostHelper.EnsureBuildHostCopied();
     }
 
     private class LinqPadApplicationInfo : ApplicationInfoBase
