@@ -1,5 +1,7 @@
 ﻿// Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
+using Metalama.Backstage.Diagnostics;
+using Metalama.Backstage.Extensibility;
 using Microsoft.CodeAnalysis.MSBuild;
 using System;
 using System.IO;
@@ -8,17 +10,25 @@ namespace Metalama.LinqPad;
 
 internal static class BuildHostHelper
 {
+    private static readonly ILogger _logger = BackstageServiceFactory.ServiceProvider.GetLoggerFactory().GetLogger( nameof(BuildHostHelper) );
+    
     public static void EnsureBuildHostCopied()
     {
+        _logger.Trace?.Log( "EnsureBuildHostCopied" );
+        
         var libDirectory = Path.GetDirectoryName( typeof(MSBuildProjectLoader).Assembly.Location );
-        var sourceBuildHostDirectory = Path.Combine( libDirectory, "..\\..\\contentFiles\\any\\any\\BuildHost-netcore" );
-        var targetBuildHostDirectory = Path.Combine( libDirectory, "BuildHost-netcore" );
-        var touchFile = Path.Combine( targetBuildHostDirectory, ".completed" );
+        var sourceContentDirectory = Path.Combine( libDirectory, "..\\..\\contentFiles\\any\\any" );
+        var touchFile = Path.Combine( libDirectory, ".contentFilesCopied" );
 
         if ( !File.Exists( touchFile ) )
         {
-            CopyFilesRecursively( sourceBuildHostDirectory, targetBuildHostDirectory );
+            _logger.Trace?.Log( $"'{touchFile}' does not exist." );
+            CopyFilesRecursively( sourceContentDirectory, libDirectory );
             File.WriteAllText( touchFile, "Completed" );
+        }
+        else
+        {
+            _logger.Trace?.Log( $"'{touchFile}' exists." );
         }
     }
 
@@ -33,7 +43,11 @@ internal static class BuildHostHelper
         //Copy all the files & Replaces any files with the same name
         foreach ( var newPath in Directory.GetFiles( sourcePath, "*.*", SearchOption.AllDirectories ) )
         {
-            File.Copy( newPath, newPath.Replace( sourcePath, targetPath, StringComparison.OrdinalIgnoreCase ), true );
+            var destFileName = newPath.Replace( sourcePath, targetPath, StringComparison.OrdinalIgnoreCase );
+            
+            _logger.Trace?.Log( $"Copying '{newPath}' -> '{destFileName}' " );
+
+            File.Copy( newPath, destFileName, true );
         }
     }
 }

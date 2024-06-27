@@ -10,18 +10,37 @@ namespace Metalama.LinqPad;
 
 internal static class DriverInitialization
 {
+    private static readonly object _sync = new object();
+    private static bool _isInitialized;
+    
     public static void Initialize()
     {
-        if ( !BackstageServiceFactoryInitializer.IsInitialized )
+        // Reset counters every time. 
+        DiagnosticReporter.ClearCounters();
+        
+        lock ( _sync )
         {
-            // Don't enforce licensing in workspaces.
+            if ( _isInitialized )
+            {
+                return;
+            }
+            else
+            {
+                _isInitialized = true;
+            }
 
-            BackstageServiceFactoryInitializer.Initialize( new BackstageInitializationOptions( new LinqPadApplicationInfo() ) { AddSupportServices = true } );
+            if ( !BackstageServiceFactoryInitializer.IsInitialized )
+            {
+                // Don't enforce licensing in workspaces.
+
+                BackstageServiceFactoryInitializer.Initialize(
+                    new BackstageInitializationOptions( new LinqPadApplicationInfo() ) { AddSupportServices = true } );
+            }
+
+            BuildHostHelper.EnsureBuildHostCopied();
+
+            DiagnosticReporter.ReportAction = diagnostics => diagnostics.Dump( "Error List" );
         }
-
-        BuildHostHelper.EnsureBuildHostCopied();
-
-        DiagnosticReporter.ReportAction = diagnostics => diagnostics.Dump( "Error List" );
     }
 
     private class LinqPadApplicationInfo : ApplicationInfoBase

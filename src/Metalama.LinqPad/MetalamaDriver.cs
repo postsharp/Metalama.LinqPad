@@ -26,7 +26,7 @@ namespace Metalama.LinqPad
     {
         private static ILogger? _logger;
 
-        private static void Initialize()
+        public static void Initialize()
         {
             // We don't start initialization in the static constructor because it causes LinqPad to generate to timeout exception
             // when the debugger UI is active.

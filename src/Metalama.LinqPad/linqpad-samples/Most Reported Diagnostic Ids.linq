@@ -1,11 +1,17 @@
-<Query Kind="Expression">
+<Query Kind="Statements">
   <NuGetReference Prerelease="true">Metalama.LinqPad</NuGetReference>
   <Namespace>Metalama.Framework.Workspaces</Namespace>
   <Namespace>Metalama.Framework.Code</Namespace>
+  <Namespace>Metalama.Framework.Code.Collections</Namespace>
+  <Namespace>Metalama.Framework.Introspection</Namespace>
+  <Namespace>Metalama.Framework.Diagnostics</Namespace>
+  <Namespace>Metalama.LinqPad</Namespace>
 </Query>
 
 // For proper formatting of the dump output, add this to My Extensions as a top-level method:
 // public static object ToDump(object obj) => Metalama.LinqPad.MetalamaDumper.ToDump(obj);
+
+MetalamaDriver.Initialize();
 
 WorkspaceCollection.Default.Load(@"C:\src\metalama\Metalama.sln")
     .Diagnostics
