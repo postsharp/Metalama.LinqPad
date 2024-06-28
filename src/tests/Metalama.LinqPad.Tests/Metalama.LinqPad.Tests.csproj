@@ -16,6 +16,8 @@
         <ProjectReference Include="..\..\Metalama.LinqPad\Metalama.LinqPad.csproj" />
         <PackageReference Include="Metalama.Compiler.Sdk" />
         <PackageReference Include="Metalama.Testing.UnitTesting" />
+        <!-- Must include explicitly because the package has content. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
     </ItemGroup>
 
 </Project>
