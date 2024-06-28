@@ -35,7 +35,7 @@ namespace Metalama.LinqPad
                 .GetMethod( nameof(CreateLazy), BindingFlags.Static | BindingFlags.NonPublic )
                 .AssertNotNull()
                 .MakeGenericMethod( propertyType )
-                .Invoke( null, new object[] { new Func<object?>( () => getter( owner ) ) } )!;
+                .Invoke( null, [new Func<object?>( () => getter( owner ) )] )!;
         }
 
         public static object? FormatPropertyValue( object? value ) => FormatPropertyValueTestable( value ).View;
@@ -78,7 +78,7 @@ namespace Metalama.LinqPad
                     .GetMethod( nameof(CreateGrouping), BindingFlags.Static | BindingFlags.NonPublic )
                     .AssertNotNull()
                     .MakeGenericMethod( groupingInterface.GetGenericArguments() )
-                    .Invoke( null, new[] { value } )!;
+                    .Invoke( null, [value] )!;
             }
 
             if ( IsComplexType( value ) )
@@ -258,7 +258,7 @@ namespace Metalama.LinqPad
             public const string Separator = "|||";
             public const string ArgumentPrefix = "arg:";
 
-            public List<RichTextToken> Arguments { get; } = new();
+            public List<RichTextToken> Arguments { get; } = [];
 
             public string Format( string? format, object? arg, IFormatProvider? formatProvider )
             {

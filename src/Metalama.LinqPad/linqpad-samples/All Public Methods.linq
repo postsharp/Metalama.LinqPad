@@ -1,5 +1,11 @@
-<Query Kind="Statements">
-  <NuGetReference>Metalama.LinqPad</NuGetReference>
+<Query Kind="Expression">
+  <Connection>
+    <ID>615c0f52-0344-430e-bdb4-60068ec155aa</ID>
+    <NamingServiceVersion>2</NamingServiceVersion>
+    <Persist>false</Persist>
+    <Driver Assembly="Metalama.LinqPad" PublicKeyToken="772fca7b1db8db06">Metalama.LinqPad.MetalamaScratchpadDriver</Driver>
+  </Connection>
+  <NuGetReference Prerelease="true">Metalama.LinqPad</NuGetReference>
   <Namespace>Metalama.Framework.Workspaces</Namespace>
   <Namespace>Metalama.Framework.Code</Namespace>
   <Namespace>Metalama.Framework.Code.Collections</Namespace>
@@ -8,20 +14,12 @@
   <Namespace>Metalama.LinqPad</Namespace>
 </Query>
 
-
-// For proper formatting of the dump output, add this to My Extensions as a top-level method:
-// public static object ToDump(object obj) => Metalama.LinqPad.MetalamaDumper.ToDump(obj);
-
-
-MetalamaDriver.Initialize();
-
-WorkspaceCollection.Default.Load(@"C:\src\metalama\Metalama.sln")
+Workspace.Load(@"C:\src\metalama\Metalama.sln")
     .SourceCode
 	.Methods
 	.Where( m => m.Accessibility ==  Metalama.Framework.Code.Accessibility.Public && m.DeclaringType.Accessibility == Metalama.Framework.Code.Accessibility.Public )
 	.GroupBy( m => m.DeclaringType.FullName )
 	.OrderBy( g => g.Key )
-	.Dump();
 	
 	
 

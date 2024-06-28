@@ -13,7 +13,7 @@ namespace Metalama.LinqPad
         public GroupingFacade( IGrouping<TKey, TItems> underlying )
         {
             this.Key = underlying.Key;
-            this.Items = underlying.ToImmutableArray();
+            this.Items = [..underlying];
         }
 
         public TKey Key { get; }

@@ -31,7 +31,7 @@ namespace Metalama.LinqPad
         public FacadeObjectFactory( Func<IDeclaration, GetCompilationInfo>? workspaceExpression = null, IEnumerable<Assembly>? publicAssemblies = null )
         {
             this.GetGetCompilationInfo = workspaceExpression ?? (_ => new GetCompilationInfo( "workspace", false ));
-            publicAssemblies ??= Enumerable.Empty<Assembly>();
+            publicAssemblies ??= [];
 
             this.PublicAssemblies = new[]
                 {

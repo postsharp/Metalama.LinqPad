@@ -7,10 +7,10 @@ using System;
 namespace Metalama.LinqPad
 {
     /// <summary>
-    /// The base class for all queries created with <see cref="MetalamaDriver"/>.
+    /// The base class for all queries created with <see cref="MetalamaWorkspaceDriver"/>.
     /// </summary>
     [PublicAPI]
-    public class MetalamaDataContext
+    public abstract class MetalamaWorkspaceDataContext
     {
         // ReSharper disable once InconsistentNaming
         // ReSharper disable once MemberCanBePrivate.Global
@@ -18,7 +18,7 @@ namespace Metalama.LinqPad
         protected readonly Workspace workspace;
 #pragma warning restore SA1401, IDE1006
 
-        public MetalamaDataContext( string path, bool ignoreWorkspaceErrors )
+        public MetalamaWorkspaceDataContext( string path, bool ignoreWorkspaceErrors )
         {
             DriverInitialization.Initialize();
             

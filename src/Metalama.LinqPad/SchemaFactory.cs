@@ -33,7 +33,7 @@ internal sealed class SchemaFactory
         var isMetalamaEnabled = workspace != null && workspace.Projects.Any( x => x.IsMetalamaEnabled );
 
         var workspaceSchema = this.GetProjectSetSchema( "workspace", p => p.Name != nameof(IProjectSet.Projects), isMetalamaEnabled, true );
-        workspaceItem.Children = new List<ExplorerItem>( workspaceSchema );
+        workspaceItem.Children = [..workspaceSchema];
 
         if ( workspace != null )
         {
@@ -42,7 +42,7 @@ internal sealed class SchemaFactory
                 DragText = "workspace.Projects",
                 ToolTipText = "Query individual projects of the workspace",
                 IsEnumerable = true,
-                Children = new List<ExplorerItem>()
+                Children = []
             };
 
             rootSchema.Add( projectsItem );
@@ -61,7 +61,7 @@ internal sealed class SchemaFactory
                     };
 
                 var projectSchema = this.GetProjectSetSchema( prefix, p => p.Name != nameof(IProjectSet.Projects), project.IsMetalamaEnabled, false );
-                projectItem.Children = new List<ExplorerItem>( projectSchema );
+                projectItem.Children = [..projectSchema];
 
                 projectsItem.Children.Add( projectItem );
             }
@@ -164,7 +164,7 @@ internal sealed class SchemaFactory
     {
         if ( type == typeof(string) )
         {
-            return Enumerable.Empty<Type>();
+            return [];
         }
         else if ( type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) )
         {

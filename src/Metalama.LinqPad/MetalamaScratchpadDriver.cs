@@ -8,7 +8,6 @@ using Metalama.Backstage.Extensibility;
 using Metalama.Framework.Code;
 using Metalama.Framework.Engine;
 using Metalama.Framework.Engine.Pipeline;
-using Metalama.Framework.Engine.Utilities;
 using Metalama.Framework.Introspection;
 using Metalama.Framework.Workspaces;
 using System;
@@ -19,46 +18,42 @@ using System.Reflection;
 namespace Metalama.LinqPad
 {
     /// <summary>
-    /// A LinqPad driver that lets you query Metalama workspaces.
+    /// A LinqPad driver that does not include a workspace in the context.
     /// </summary>
     [UsedImplicitly]
-    public sealed class MetalamaDriver : DynamicDataContextDriver
+    public class MetalamaScratchpadDriver : DynamicDataContextDriver
     {
-        private static ILogger? _logger;
+        protected static ILogger? Logger { get; private set; }
 
-        public static void Initialize()
+        internal static void Initialize()
         {
             // We don't start initialization in the static constructor because it causes LinqPad to generate to timeout exception
             // when the debugger UI is active.
-            if ( _logger == null )
+            if ( Logger == null )
             {
                 DriverInitialization.Initialize();
-                _logger = BackstageServiceFactory.ServiceProvider.GetLoggerFactory().GetLogger( "LinqPad" );
+                Logger = BackstageServiceFactory.ServiceProvider.GetLoggerFactory().GetLogger( "LinqPad" );
             }
         }
 
-        public override string Name => "Metalama";
+        public override bool AreRepositoriesEquivalent( IConnectionInfo c1, IConnectionInfo c2 ) => true;
+
+        public override void OnQueryFinishing( IConnectionInfo cxInfo, object context, QueryExecutionManager executionManager ) 
+            => DiagnosticReporter.ClearCounters();
+        
+        public override string Name => "Metalama Scratchpad";
 
         public override string Author => "PostSharp Technologies";
 
         private readonly FacadeObjectFactory _facadeObjectFactory = new();
 
-        public override string GetConnectionDescription( IConnectionInfo cxInfo )
-        {
-            // For static drivers, we can use the description of the custom type & its assembly:
-            var connectionData = new ConnectionData( cxInfo );
-
-            return connectionData.DisplayName;
-        }
+        public override string GetConnectionDescription( IConnectionInfo cxInfo ) => this.Name;
 
         public override bool ShowConnectionDialog( IConnectionInfo cxInfo, ConnectionDialogOptions dialogOptions )
         {
             Initialize();
 
-            // Prompt the user for a custom assembly and type name:
-            var dialog = new ConnectionDialog( cxInfo );
-
-            return dialog.ShowDialog() == true;
+            return true;
         }
 
         public override List<ExplorerItem> GetSchemaAndBuildAssembly(
@@ -71,11 +66,6 @@ namespace Metalama.LinqPad
 
             try
             {
-                var connectionData = new ConnectionData( cxInfo );
-
-                var escapedPath = connectionData.Project.ReplaceOrdinal( "\"", "\"\"" );
-                var ignoreLoadErrors = connectionData.IgnoreWorkspaceErrors ? "true" : "false";
-
                 var source = $@"
 using System;
 using System.Collections.Generic;
@@ -85,29 +75,21 @@ using Metalama.Framework.Workspaces;
 namespace {nameSpace}
 {{
     // The main typed data class. The user's queries subclass this, so they have easy access to all its members.
-	public class {typeName} : {nameof(MetalamaDataContext)}
+	public class {typeName} : {nameof(MetalamaScratchpadDataContext)}
 	{{
-	    public {typeName}() : base( @""{escapedPath}"", {ignoreLoadErrors} )
-		{{
-		}}        
+	           
 	}}	
 }}";
 
 #pragma warning disable SYSLIB0044
                 Compile( source, assemblyToBuild.CodeBase!, cxInfo );
 #pragma warning restore SYSLIB0044
-
-                WorkspaceCollection.Default.IgnoreLoadErrors = connectionData.IgnoreWorkspaceErrors;
-                var workspace = WorkspaceCollection.Default.Load( connectionData.Project );
-
-                var schemaFactory = new SchemaFactory( FormatTypeName );
-                var projectSchema = schemaFactory.GetSchema( workspace );
-
-                return projectSchema;
+                
+                return [];
             }
             catch ( Exception e )
             {
-                _logger?.Error?.Log( e.ToString() );
+                Logger?.Error?.Log( e.ToString() );
 
                 throw;
             }
@@ -125,7 +107,7 @@ namespace {nameSpace}
 
         private static IReadOnlyList<string> GetAssembliesToAdd( bool addReferenceAssemblies, IConnectionInfo connectionInfo )
         {
-            List<string> assembliesToReference = new();
+            List<string> assembliesToReference = [];
 
             if ( addReferenceAssemblies )
             {
@@ -133,7 +115,7 @@ namespace {nameSpace}
             }
 
             // Metalama.LinqPad
-            assembliesToReference.Add( typeof(MetalamaDriver).Assembly.Location );
+            assembliesToReference.Add( typeof(MetalamaWorkspaceDriver).Assembly.Location );
 
             // Metalama.Framework
             assembliesToReference.Add( typeof(IDeclaration).Assembly.Location );
@@ -152,7 +134,7 @@ namespace {nameSpace}
 
         public override IEnumerable<string> GetAssembliesToAdd( IConnectionInfo cxInfo ) => GetAssembliesToAdd( false, cxInfo );
 
-        private static void Compile( string cSharpSourceCode, string outputFile, IConnectionInfo connectionInfo )
+        protected static void Compile( string cSharpSourceCode, string outputFile, IConnectionInfo connectionInfo )
         {
             var assembliesToReference = GetAssembliesToAdd( true, connectionInfo );
 
@@ -161,7 +143,9 @@ namespace {nameSpace}
             var compileResult = CompileSource(
                 new CompilationInput
                 {
-                    FilePathsToReference = assembliesToReference.ToArray(), OutputPath = outputFile, SourceCode = new[] { cSharpSourceCode }
+                    FilePathsToReference = assembliesToReference.ToArray(), 
+                    OutputPath = outputFile, 
+                    SourceCode = [cSharpSourceCode]
                 } );
 
             if ( compileResult.Errors.Length > 0 )

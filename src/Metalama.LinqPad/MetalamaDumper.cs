@@ -9,8 +9,8 @@ using System.Linq;
 namespace Metalama.LinqPad
 {
     /// <summary>
-    /// Provides a <see cref="ToDump"/> method, which can be used to format object trees in the way that <see cref="MetalamaDriver"/> does,
-    /// but without using <see cref="MetalamaDriver"/>.
+    /// Provides a <see cref="ToDump"/> method, which can be used to format object trees in the way that <see cref="MetalamaWorkspaceDriver"/> does,
+    /// but without using <see cref="MetalamaWorkspaceDriver"/>.
     /// </summary>
     [PublicAPI]
     public static class MetalamaDumper
@@ -18,7 +18,7 @@ namespace Metalama.LinqPad
         private static readonly FacadeObjectFactory _facadeObjectFactory = new( GetWorkspaceExpression );
 
         /// <summary>
-        /// Formats object trees in the way that <see cref="MetalamaDriver"/> does but without using <see cref="MetalamaDriver"/>.
+        /// Formats object trees in the way that <see cref="MetalamaWorkspaceDriver"/> does but without using <see cref="MetalamaWorkspaceDriver"/>.
         /// </summary>
         public static object? ToDump( object? obj ) => _facadeObjectFactory.GetFacade( obj ) ?? obj;
 
