@@ -3,6 +3,7 @@
 using LINQPad.Extensibility.DataContext;
 using Metalama.Framework.Workspaces;
 using Metalama.Testing.UnitTesting;
+using Microsoft.Build.Locator;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +19,14 @@ public sealed class SchemaTests : UnitTestClass
 {
     private readonly ITestOutputHelper _logger;
 
+    static SchemaTests()
+    {
+        if ( MSBuildLocator.CanRegister )
+        {
+            MSBuildLocator.RegisterDefaults();
+        }
+    }
+    
     public SchemaTests( ITestOutputHelper logger )
     {
         this._logger = logger;
