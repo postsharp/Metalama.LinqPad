@@ -91,7 +91,8 @@ namespace Metalama.LinqPad
             {
                 foreach ( var property in publicType.GetProperties( BindingFlags.Public | BindingFlags.Instance ) )
                 {
-                    if ( property.GetCustomAttributes<HiddenAttribute>().Any() )
+                    if ( property.GetCustomAttributes<HiddenAttribute>().Any() ||
+                         property.GetCustomAttributes<ObsoleteAttribute>().Any() )
                     {
                         continue;
                     }

@@ -105,7 +105,8 @@ namespace {nameSpace}
                 "Metalama.Framework.Code",
                 "Metalama.Framework.Code.Collections",
                 "Metalama.Framework.Introspection",
-                "Metalama.Framework.Diagnostics"
+                "Metalama.Framework.Diagnostics",
+                "Metalama.LinqPad"
             };
 
         private static IReadOnlyList<string> GetAssembliesToAdd( bool addReferenceAssemblies, IConnectionInfo connectionInfo )
