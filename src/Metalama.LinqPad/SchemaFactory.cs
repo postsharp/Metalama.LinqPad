@@ -1,6 +1,7 @@
 ﻿// Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
 using LINQPad.Extensibility.DataContext;
+using Metalama.Framework.Code;
 using Metalama.Framework.Introspection;
 using Metalama.Framework.Workspaces;
 using Microsoft.CodeAnalysis.CSharp;
@@ -20,29 +21,26 @@ internal sealed class SchemaFactory
         this._formatTypeFunc = formatTypeFunc;
     }
 
-    public List<ExplorerItem> GetSchema( Workspace? workspace = null )
+    public List<ExplorerItem> GetSchema( string workspaceExpression, Workspace? workspace = null )
     {
-        var rootSchema = new List<ExplorerItem>();
-
-        var workspaceItem = new ExplorerItem( "Workspace", ExplorerItemKind.QueryableObject, ExplorerIcon.Schema )
-        {
-            DragText = "workspace", ToolTipText = "Query all projects loaded in the workspace as a whole."
-        };
-
-        rootSchema.Add( workspaceItem );
         var isMetalamaEnabled = workspace != null && workspace.Projects.Any( x => x.IsMetalamaEnabled );
 
-        var workspaceSchema = this.GetProjectSetSchema( "workspace", p => p.Name != nameof(IProjectSet.Projects), isMetalamaEnabled, true );
-        workspaceItem.Children = [..workspaceSchema];
+        var workspaceSchema = this.GetProjectSetSchema( workspaceExpression, p => p.Name != nameof(IProjectSet.Projects), isMetalamaEnabled, true );
 
         if ( workspace != null )
         {
+            var rootSchema = new List<ExplorerItem>();
+
+            var workspaceItem = new ExplorerItem( "Workspace", ExplorerItemKind.QueryableObject, ExplorerIcon.Schema )
+            {
+                DragText = workspaceExpression, ToolTipText = "Query all projects loaded in the workspace as a whole.", Children = [..workspaceSchema]
+            };
+
+            rootSchema.Add( workspaceItem );
+
             var projectsItem = new ExplorerItem( "Projects", ExplorerItemKind.QueryableObject, ExplorerIcon.Table )
             {
-                DragText = "workspace.Projects",
-                ToolTipText = "Query individual projects of the workspace",
-                IsEnumerable = true,
-                Children = []
+                DragText = $"{workspaceExpression}.Projects", ToolTipText = "Query individual projects of the workspace", IsEnumerable = true, Children = []
             };
 
             rootSchema.Add( projectsItem );
@@ -52,7 +50,7 @@ internal sealed class SchemaFactory
                 var nameLiteral = SyntaxFactory.Literal( project.Name ).Text;
                 var frameworkLiteral = SyntaxFactory.Literal( project.TargetFramework ).Text;
 
-                var prefix = $"workspace.GetProject({nameLiteral}, {frameworkLiteral})";
+                var prefix = $"{workspaceExpression}.GetProject({nameLiteral}, {frameworkLiteral})";
 
                 var projectItem =
                     new ExplorerItem( project.ToString(), ExplorerItemKind.QueryableObject, ExplorerIcon.Box )
@@ -65,9 +63,13 @@ internal sealed class SchemaFactory
 
                 projectsItem.Children.Add( projectItem );
             }
-        }
 
-        return rootSchema;
+            return rootSchema;
+        }
+        else
+        {
+            return workspaceSchema;
+        }
     }
 
     private List<ExplorerItem> GetProjectSetSchema( string prefix, Func<PropertyInfo, bool> filterProperty, bool isMetalamaEnabled, bool isWorkspace )
@@ -155,6 +157,22 @@ internal sealed class SchemaFactory
                 .Select( p => this.GetChildItem( elementTypeLookup, p.Name, p.PropertyType ) );
 
             table.Children = props.ToMutableList();
+
+            // If we have a declaration, populate reference extension methods.
+            if ( parentType.IsAssignableTo( typeof(IDeclaration) ) )
+            {
+                table.Children.Add(
+                    new ExplorerItem( "GetInboundReferences()", ExplorerItemKind.ReferenceLink, ExplorerIcon.TableFunction )
+                    {
+                        IsEnumerable = true, DragText = prefix + "GetInboundReferences()"
+                    } );
+
+                table.Children.Add(
+                    new ExplorerItem( "GetOutboundReferences()", ExplorerItemKind.ReferenceLink, ExplorerIcon.TableFunction )
+                    {
+                        IsEnumerable = true, DragText = prefix + "GetOutboundReferences()"
+                    } );
+            }
         }
 
         return topLevelProps;

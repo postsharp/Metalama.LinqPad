@@ -10,6 +10,11 @@ namespace Metalama.LinqPad.Tests
 {
     public sealed class FacadeObjectTests : UnitTestClass
     {
+        static FacadeObjectTests()
+        {
+            Initializer.Initialize();
+        }
+
         private static readonly FacadeObjectFactory _facadeObjectFactory = new( publicAssemblies: new[] { typeof(Impl).Assembly } );
 
         private static object? DumpClass<T>( T? obj )

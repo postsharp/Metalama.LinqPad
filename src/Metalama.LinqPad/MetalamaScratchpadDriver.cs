@@ -38,9 +38,9 @@ namespace Metalama.LinqPad
 
         public override bool AreRepositoriesEquivalent( IConnectionInfo c1, IConnectionInfo c2 ) => true;
 
-        public override void OnQueryFinishing( IConnectionInfo cxInfo, object context, QueryExecutionManager executionManager ) 
+        public override void OnQueryFinishing( IConnectionInfo cxInfo, object context, QueryExecutionManager executionManager )
             => DiagnosticReporter.ClearCounters();
-        
+
         public override string Name => "Metalama Scratchpad";
 
         public override string Author => "PostSharp Technologies";
@@ -84,8 +84,11 @@ namespace {nameSpace}
 #pragma warning disable SYSLIB0044
                 Compile( source, assemblyToBuild.CodeBase!, cxInfo );
 #pragma warning restore SYSLIB0044
-                
-                return [];
+
+                var schemaFactory = new SchemaFactory( FormatTypeName );
+                var projectSchema = schemaFactory.GetSchema( "Workspace.Load(\"MySolution.sln\")" );
+
+                return projectSchema;
             }
             catch ( Exception e )
             {
@@ -141,12 +144,7 @@ namespace {nameSpace}
             // CompileSource is a static helper method to compile C# source code using LINQPad's built-in Roslyn libraries.
             // If you prefer, you can add a NuGet reference to the Roslyn libraries and use them directly.
             var compileResult = CompileSource(
-                new CompilationInput
-                {
-                    FilePathsToReference = assembliesToReference.ToArray(), 
-                    OutputPath = outputFile, 
-                    SourceCode = [cSharpSourceCode]
-                } );
+                new CompilationInput { FilePathsToReference = assembliesToReference.ToArray(), OutputPath = outputFile, SourceCode = [cSharpSourceCode] } );
 
             if ( compileResult.Errors.Length > 0 )
             {

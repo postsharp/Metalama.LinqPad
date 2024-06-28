@@ -91,6 +91,11 @@ namespace Metalama.LinqPad
             {
                 foreach ( var property in publicType.GetProperties( BindingFlags.Public | BindingFlags.Instance ) )
                 {
+                    if ( property.GetCustomAttributes<HiddenAttribute>().Any() )
+                    {
+                        continue;
+                    }
+
                     var getter = property.GetMethod;
 
                     if ( getter == null || getter.GetParameters().Length != 0 )
@@ -103,6 +108,11 @@ namespace Metalama.LinqPad
 
                 foreach ( var field in publicType.GetFields( BindingFlags.Public | BindingFlags.Instance ) )
                 {
+                    if ( field.GetCustomAttributes<HiddenAttribute>().Any() )
+                    {
+                        continue;
+                    }
+
                     properties[field.Name] = new FacadeProperty( field.Name, field.FieldType, CreateCompiledGetter( field ) );
                 }
             }

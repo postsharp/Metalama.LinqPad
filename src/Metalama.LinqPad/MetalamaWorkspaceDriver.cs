@@ -18,7 +18,7 @@ namespace Metalama.LinqPad
     public sealed class MetalamaWorkspaceDriver : MetalamaScratchpadDriver
     {
         public override string Name => "Metalama Workspace";
-        
+
         public override string GetConnectionDescription( IConnectionInfo cxInfo )
         {
             // For static drivers, we can use the description of the custom type & its assembly:
@@ -95,7 +95,7 @@ namespace {nameSpace}
                 var workspace = WorkspaceCollection.Default.Load( connectionData.Project );
 
                 var schemaFactory = new SchemaFactory( FormatTypeName );
-                var projectSchema = schemaFactory.GetSchema( workspace );
+                var projectSchema = schemaFactory.GetSchema( "workspace", workspace );
 
                 return projectSchema;
             }

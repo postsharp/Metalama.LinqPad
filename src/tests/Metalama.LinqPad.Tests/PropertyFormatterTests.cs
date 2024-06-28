@@ -8,6 +8,11 @@ namespace Metalama.LinqPad.Tests
 {
     public sealed class PropertyFormatterTests
     {
+        static PropertyFormatterTests()
+        {
+            Initializer.Initialize();
+        }
+
         [Fact]
         public void GroupingTest()
         {
