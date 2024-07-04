@@ -25,7 +25,16 @@
         <!-- Required to force LinqPad to load this package instead of the one of the SDK directory. -->
         <PackageReference Include="Microsoft.Extensions.Logging" />
 
+        <!-- Must include explicitly because the package has content. -->
+        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
+
         <InternalsVisibleTo Include="Metalama.LinqPad.Tests" />
+
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>Package:Microsoft.CodeAnalysis.Workspaces.MSBuild</_Parameter1>
+            <_Parameter2>$(RoslynVersion)</_Parameter2>
+        </AssemblyAttribute>
+
     </ItemGroup>
 
     <ItemGroup>

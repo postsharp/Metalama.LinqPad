@@ -5,6 +5,7 @@ using LINQPad;
 using LINQPad.Extensibility.DataContext;
 using Metalama.Backstage.Diagnostics;
 using Metalama.Backstage.Extensibility;
+using Metalama.Backstage.Utilities;
 using Metalama.Framework.Code;
 using Metalama.Framework.Engine;
 using Metalama.Framework.Engine.Pipeline;
@@ -161,5 +162,17 @@ namespace {nameSpace}
 
             base.InitializeContext( cxInfo, context, executionManager );
         }
+
+        public override void OverrideDriverDependencies( DriverDependencyInfo dependencyInfo )
+        {
+            base.OverrideDriverDependencies( dependencyInfo );
+
+            var packageName = "Microsoft.CodeAnalysis.Workspaces.MSBuild";
+            var packageVersion = AssemblyMetadataReader.GetInstance( this.GetType().Assembly ).GetPackageVersion( packageName );
+            
+            dependencyInfo.AddNuGetPackages ([(packageName, packageVersion)]);
+        }
+
+        public override bool AlwaysCopyLocal( IConnectionInfo cxInfo ) => true;
     }
 }
