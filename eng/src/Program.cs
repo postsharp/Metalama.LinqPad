@@ -8,7 +8,6 @@ using PostSharp.Engineering.BuildTools.Build.Model;
 using PostSharp.Engineering.BuildTools.Build.Solutions;
 using PostSharp.Engineering.BuildTools.Dependencies.Definitions;
 using PostSharp.Engineering.BuildTools.Utilities;
-using Spectre.Console.Cli;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -42,11 +41,7 @@ var product = new Product( MetalamaDependencies.MetalamaLinqPad )
             } )
 };
 
-var commandApp = new CommandApp();
-
-commandApp.AddProductCommands( product );
-
-return commandApp.Run( args );
+return new EngineeringApp( product ).Run( args );
 
 // TODO: This is a prototype that should go to the main engineering later or be removed.
 #pragma warning disable CA1001
