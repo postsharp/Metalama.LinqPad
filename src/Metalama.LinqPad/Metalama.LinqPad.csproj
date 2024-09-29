@@ -24,10 +24,7 @@
         
         <!-- Required to force LinqPad to load this package instead of the one of the SDK directory. -->
         <PackageReference Include="Microsoft.Extensions.Logging" />
-
-        <!-- Must include explicitly because the package has content. -->
-        <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
-
+        
         <InternalsVisibleTo Include="Metalama.LinqPad.Tests" />
 
         <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">

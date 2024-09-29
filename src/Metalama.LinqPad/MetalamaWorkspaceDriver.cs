@@ -68,7 +68,7 @@ namespace Metalama.LinqPad
                 var connectionData = new ConnectionData( cxInfo );
 
                 var escapedPath = connectionData.Project.ReplaceOrdinal( "\"", "\"\"" );
-                var ignoreLoadErrors = connectionData.IgnoreWorkspaceErrors ? "true" : "false";
+                var reportLoadErrors = connectionData.ReportWorkspaceErrors ? "true" : "false";
 
                 var source = $@"
 using System;
@@ -81,7 +81,7 @@ namespace {nameSpace}
     // The main typed data class. The user's queries subclass this, so they have easy access to all its members.
 	public class {typeName} : {nameof(MetalamaWorkspaceDataContext)}
 	{{
-	    public {typeName}() : base( @""{escapedPath}"", {ignoreLoadErrors} )
+	    public {typeName}() : base( @""{escapedPath}"", {reportLoadErrors} )
 		{{
 		}}        
 	}}	
@@ -91,7 +91,6 @@ namespace {nameSpace}
                 Compile( source, assemblyToBuild.CodeBase!, cxInfo );
 #pragma warning restore SYSLIB0044
 
-                WorkspaceCollection.Default.IgnoreLoadErrors = connectionData.IgnoreWorkspaceErrors;
                 var workspace = WorkspaceCollection.Default.Load( connectionData.Project );
 
                 var schemaFactory = new SchemaFactory( FormatTypeName );
