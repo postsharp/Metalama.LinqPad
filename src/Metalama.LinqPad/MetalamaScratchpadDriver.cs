@@ -13,8 +13,11 @@ using Metalama.Framework.Introspection;
 using Metalama.Framework.Workspaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using InvalidOperationException = System.InvalidOperationException;
 
 namespace Metalama.LinqPad
 {
@@ -158,19 +161,31 @@ namespace {nameSpace}
 
         public override void InitializeContext( IConnectionInfo cxInfo, object context, QueryExecutionManager executionManager )
         {
+            Debugger.Launch();
+
             Util.HtmlHead.AddStyles( "a.error { color: red !important; } span.null, .empty { color: #888 !important; }" );
 
             base.InitializeContext( cxInfo, context, executionManager );
+
+            // MSBuild runtime assemblies must not be in our shadow directory. This may happen if wrong packages are referenced from My Extensions.
+            var fullPath = Util.GetFullPath( "Microsoft.Build.dll" );
+
+            if ( File.Exists( fullPath ) )
+            {
+                throw new InvalidOperationException(
+                    $"The file '{fullPath}' must not exist. Check that no obsolete version of Metalama.LinqPad, or the Microsoft.Build package, is referenced in 'My Extensions'." );
+            }
         }
 
         public override void OverrideDriverDependencies( DriverDependencyInfo dependencyInfo )
         {
             base.OverrideDriverDependencies( dependencyInfo );
 
-            var packageName = "Microsoft.CodeAnalysis.Workspaces.MSBuild";
-            var packageVersion = AssemblyMetadataReader.GetInstance( this.GetType().Assembly ).GetPackageVersion( packageName );
-            
-            dependencyInfo.AddNuGetPackages ([(packageName, packageVersion)]);
+            var packageName = "Metalama.Framework.Workspaces";
+            var packageVersion = AssemblyMetadataReader.GetInstance( typeof(WorkspaceCollection).Assembly ).PackageVersion;
+
+            // We must explicitly add a reference to the Workspace
+            dependencyInfo.AddNuGetPackages( [(packageName, packageVersion)] );
         }
 
         public override bool AlwaysCopyLocal( IConnectionInfo cxInfo ) => true;

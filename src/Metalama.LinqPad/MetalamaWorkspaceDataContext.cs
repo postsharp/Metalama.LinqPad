@@ -1,6 +1,7 @@
 // Copyright (c) SharpCrafters s.r.o. See the LICENSE.md file in the root directory of this repository root for details.
 
 using JetBrains.Annotations;
+using LINQPad;
 using Metalama.Framework.Workspaces;
 using System;
 
@@ -18,16 +19,15 @@ namespace Metalama.LinqPad
         protected readonly Workspace workspace;
 #pragma warning restore SA1401, IDE1006
 
-        public MetalamaWorkspaceDataContext( string path, bool ignoreWorkspaceErrors )
+        public MetalamaWorkspaceDataContext( string path, bool reportWorkspaceErrors )
         {
             DriverInitialization.Initialize();
-            
-            WorkspaceCollection.Default.IgnoreLoadErrors = ignoreWorkspaceErrors;
+
             this.workspace = WorkspaceCollection.Default.Load( path );
 
-            foreach ( var diagnostic in this.workspace.WorkspaceDiagnostics )
+            if ( reportWorkspaceErrors )
             {
-                Console.WriteLine( diagnostic.FormatAsBuildDiagnostic() );
+                this.workspace.WorkspaceDiagnostics.Dump( "Loading Issues" );
             }
         }
     }

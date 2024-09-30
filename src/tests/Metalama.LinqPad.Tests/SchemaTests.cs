@@ -64,7 +64,7 @@ public sealed class SchemaTests : UnitTestClass
 
         await File.WriteAllTextAsync( codePath, "class MyClass {}" );
 
-        var workspaceCollection = new WorkspaceCollection() { IgnoreLoadErrors = true };
+        var workspaceCollection = new WorkspaceCollection();
 
         using var workspace = await workspaceCollection.LoadAsync( projectPath );
 
