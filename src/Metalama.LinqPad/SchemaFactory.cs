@@ -198,7 +198,7 @@ internal sealed class SchemaFactory
     {
         // If the property's type is in our list of entities, then it's a Many:1 (or 1:1) reference.
         // We'll assume it's a Many:1 (we can't reliably identify 1:1s purely from reflection).
-        if ( elementTypeLookup.Contains( childPropType ) )
+        if ( childPropType != typeof(string) && elementTypeLookup.Contains( childPropType ) )
         {
             return new ExplorerItem( childPropName, ExplorerItemKind.ReferenceLink, ExplorerIcon.ManyToOne )
             {
