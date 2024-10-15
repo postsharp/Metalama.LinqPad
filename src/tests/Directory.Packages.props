@@ -2,8 +2,8 @@
   <!-- Imports Directory.Packages.props of the upper directory. Use this code in any non-root Directory.Build.* even if the file does not exit. -->
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" Condition="Exists('$([MSBuild]::GetPathOfFileAbove(`Directory.Packages.props`, `$(MSBuildThisFileDirectory)../`))')" />
   <ItemGroup>
-    <PackageVersion Include="coverlet.collector" Version="3.1.0" />
-    <PackageVersion Include="coverlet.msbuild" Version="3.1.0" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+    <PackageVersion Include="coverlet.msbuild" Version="3.1.2" />
     <PackageVersion Include="LINQPad.Runtime" Version="8.3.7" />
     <PackageVersion Include="Metalama.Compiler.Sdk" Version="$(MetalamaCompilerVersion)" />
     <PackageVersion Include="Metalama.Testing.UnitTesting" Version="$(MetalamaVersion)" />
